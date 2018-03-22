@@ -29,7 +29,9 @@ using System.Runtime.Serialization.Formatters.Binary;
 
 namespace Xceed.Wpf.Toolkit
 {
-  public partial class CollectionControlDialogBase :
+    using System.Reflection;
+
+    public partial class CollectionControlDialogBase :
     Window
   {
   }
@@ -233,9 +235,14 @@ namespace Xceed.Wpf.Toolkit
         {
           var parameters = propertyInfo.GetIndexParameters();
           var index = parameters.GetLength( 0 ) == 0 ? null : new object[] { parameters.GetLength( 0 ) - 1 };
-          var propertyInfoValue = propertyInfo.GetValue( source, index );
+            object propertyInfoValue = null;
+            if (index != null && GetPropertyValue<int>(source, "Count") != 0)
+            {
+                propertyInfoValue = propertyInfo.GetValue(source, index);
+            }
 
-          if( propertyInfo.CanWrite )
+
+                    if ( propertyInfo.CanWrite )
           {
             // Look for nested object
             if( propertyInfo.PropertyType.IsClass 
@@ -295,7 +302,35 @@ namespace Xceed.Wpf.Toolkit
       return result;
     }
 
-    private object GenerateEditableKeyValuePair( object source )
+      private T GetPropertyValue<T>(object source, string property)
+      {
+          if (source == null)
+              throw new ArgumentNullException("source");
+
+          var sourceType = source.GetType();
+          var sourceProperties = sourceType.GetProperties();
+          var properties = sourceProperties
+              .Where(s => s.Name.Equals(property));
+          if (properties.Count() == 0)
+          {
+              sourceProperties = sourceType.GetProperties(BindingFlags.Instance | BindingFlags.NonPublic);
+              properties = sourceProperties.Where(s => s.Name.Equals(property));
+          }
+
+          if (properties.Count() > 0)
+          {
+              var propertyValue = properties
+                  .Select(s => s.GetValue(source, null))
+                  .FirstOrDefault();
+
+              return propertyValue != null ? (T)propertyValue : default(T);
+          }
+
+          return default(T);
+      }
+
+
+        private object GenerateEditableKeyValuePair( object source )
     {
       var sourceType = source.GetType();
       if( (sourceType.GetGenericArguments() == null) || (sourceType.GetGenericArguments().GetLength( 0 ) != 2) )

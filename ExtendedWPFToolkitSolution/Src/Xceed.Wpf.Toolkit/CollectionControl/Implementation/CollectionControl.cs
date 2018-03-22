@@ -26,7 +26,9 @@ using Xceed.Wpf.Toolkit.Core.Utilities;
 
 namespace Xceed.Wpf.Toolkit
 {
-  [TemplatePart( Name = PART_NewItemTypesComboBox, Type = typeof( ComboBox ) )]
+    using System.Collections.Specialized;
+
+    [TemplatePart( Name = PART_NewItemTypesComboBox, Type = typeof( ComboBox ) )]
   [TemplatePart( Name = PART_PropertyGrid, Type = typeof( PropertyGrid.PropertyGrid ) )]
   [TemplatePart( Name = PART_ListBox, Type = typeof( ListBox ) )]
   public class CollectionControl : Control
@@ -94,16 +96,38 @@ namespace Xceed.Wpf.Toolkit
       }
     }
 
-    private static void OnItemsSourceChanged( DependencyObject d, DependencyPropertyChangedEventArgs e )
-    {
-      var CollectionControl = ( CollectionControl )d;
-      if( CollectionControl != null )
-        CollectionControl.OnItemSourceChanged( (IEnumerable)e.OldValue, (IEnumerable)e.NewValue );
-    }
+      private static void OnItemsSourceChanged(DependencyObject d, DependencyPropertyChangedEventArgs e)
+      {
+          var CollectionControl = (CollectionControl) d;
+          if (CollectionControl != null)
+          {
+              CollectionControl.AddINotifyCollectionEvent();
+                CollectionControl.OnItemSourceChanged((IEnumerable) e.OldValue, (IEnumerable) e.NewValue);
+          }
 
-    public void OnItemSourceChanged( IEnumerable oldValue, IEnumerable newValue )
+      }
+
+      public void AddINotifyCollectionEvent()
+      {
+          if (ItemsSource is INotifyCollectionChanged isINotifyCollectionChanged)
+          {
+              isINotifyCollectionChanged.CollectionChanged += NotifyCollectionChangedOnCollectionChanged;
+          }
+      }
+
+        private void NotifyCollectionChangedOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
+      {
+          if (sender is IEnumerable collection)
+          {
+              OnItemSourceChanged(null, collection);
+          }
+        }
+
+      public void OnItemSourceChanged( IEnumerable oldValue, IEnumerable newValue )
     {
-      if( newValue != null )
+        Items?.Clear();
+
+            if ( newValue != null )
       {
         var dict = newValue as IDictionary;
         if( dict != null )
