@@ -95,7 +95,8 @@ namespace Xceed.Wpf.Toolkit
     #region NewItemTypes Property
 
     public static readonly DependencyProperty NewItemTypesProperty = DependencyProperty.Register( "NewItemTypes", typeof( IList ), typeof( CollectionControlButton ), new UIPropertyMetadata( null ) );
-    public IList<Type> NewItemTypes
+
+      public IList<Type> NewItemTypes
     {
       get
       {
@@ -126,9 +127,12 @@ namespace Xceed.Wpf.Toolkit
       collectionControlDialog.NewItemTypes = this.NewItemTypes;
       collectionControlDialog.ItemsSourceType = this.ItemsSourceType;
       collectionControlDialog.IsReadOnly = this.IsReadOnly;
+        collectionControlDialog.OnItemCreating = OnItemCreating;
       collectionControlDialog.ShowDialog();
     }
 
     #endregion
+
+      public Action<object> OnItemCreating { get; set; }
   }
 }

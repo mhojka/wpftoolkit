@@ -89,7 +89,9 @@ namespace Xceed.Wpf.Toolkit
     }
 
     public static readonly DependencyProperty IsReadOnlyProperty = DependencyProperty.Register( "IsReadOnly", typeof( bool ), typeof( CollectionControlDialog ), new UIPropertyMetadata( false ) );
-    public bool IsReadOnly
+      private Action<object> _onItemCreating;
+
+      public bool IsReadOnly
     {
       get
       {
@@ -364,6 +366,19 @@ namespace Xceed.Wpf.Toolkit
              && keys.All( x => x != null );
     }
 
-#endregion
-  }
+        #endregion
+
+      public Action<object> OnItemCreating
+      {
+          get
+          {
+              return _onItemCreating;
+          }
+          set
+          {
+              _onItemCreating = value;
+              _collectionControl.OnItemCreated = value;
+          }
+      }
+    }
 }

@@ -258,10 +258,9 @@ namespace Xceed.Wpf.Toolkit
       }
     }
 
+      public Action<object> OnItemCreated { get; set; }
 
-
-
-    #endregion
+      #endregion
 
     #region Constructors
 
@@ -422,6 +421,7 @@ namespace Xceed.Wpf.Toolkit
     private void AddNew( object sender, ExecutedRoutedEventArgs e )
     {
       var newItem = CreateNewItem( ( Type )e.Parameter );
+        OnItemCreated?.Invoke(newItem);
       var properties = newItem.GetType().GetProperties();
       foreach( var property in properties )
       {
