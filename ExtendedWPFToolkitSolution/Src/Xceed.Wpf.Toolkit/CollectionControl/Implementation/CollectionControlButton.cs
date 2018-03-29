@@ -119,7 +119,7 @@ namespace Xceed.Wpf.Toolkit
 
     #region Methods
 
-    private void CollectionControlButton_Click( object sender, RoutedEventArgs e )
+      protected virtual void CollectionControlButton_Click( object sender, RoutedEventArgs e )
     {
       var collectionControlDialog = new CollectionControlDialog();
       var binding = new Binding( "ItemsSource" ) { Source = this, Mode = BindingMode.TwoWay };

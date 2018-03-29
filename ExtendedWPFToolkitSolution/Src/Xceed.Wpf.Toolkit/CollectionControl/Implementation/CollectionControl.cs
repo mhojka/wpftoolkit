@@ -410,7 +410,7 @@ namespace Xceed.Wpf.Toolkit
 
     #region Commands
 
-    private void AddNew( object sender, ExecutedRoutedEventArgs e )
+      protected virtual void AddNew( object sender, ExecutedRoutedEventArgs e )
     {
       var newItem = CreateNewItem( ( Type )e.Parameter );
         OnItemCreated?.Invoke(newItem);
@@ -438,7 +438,7 @@ namespace Xceed.Wpf.Toolkit
       SelectedItem = newItem;
     }
 
-    private void CanAddNew( object sender, CanExecuteRoutedEventArgs e )
+      protected virtual void CanAddNew( object sender, CanExecuteRoutedEventArgs e )
     {
       Type t = e.Parameter as Type;
       if( (t != null) && !this.IsReadOnly )
