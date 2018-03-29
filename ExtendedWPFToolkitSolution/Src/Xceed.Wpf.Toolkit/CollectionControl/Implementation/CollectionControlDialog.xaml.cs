@@ -145,7 +145,7 @@ namespace Xceed.Wpf.Toolkit
       {
         foreach( var item in this.ItemsSource )
         {
-          originalData.Add( this.Clone( item ) );
+          //originalData.Add( this.Clone( item ) );
         }
       }
     }
@@ -229,19 +229,22 @@ namespace Xceed.Wpf.Toolkit
         }
       }
       Debug.Assert( result != null );
-      if( result != null )
+      if( result != null)
       {
         var properties = sourceType.GetProperties();
 
         foreach( var propertyInfo in properties )
         {
+            //if (propertyInfo.Name == "Type")
+            //{
+            //    continue;
+            //}
           var parameters = propertyInfo.GetIndexParameters();
           var index = parameters.GetLength( 0 ) == 0 ? null : new object[] { parameters.GetLength( 0 ) - 1 };
             object propertyInfoValue = null;
-
-            if (propertyInfo.Name == "Item")
+            if (parameters.Length > 0 && source is IList)
             {
-                if (index != null && GetPropertyValue<int>(source, "Count") != 0)
+                if (((IList) source).Count > 0)
                 {
                     propertyInfoValue = propertyInfo.GetValue(source, index);
                 }
@@ -249,9 +252,8 @@ namespace Xceed.Wpf.Toolkit
             else
             {
                 propertyInfoValue = propertyInfo.GetValue(source, index);
-            }
-
-
+                    }
+            
                     if ( propertyInfo.CanWrite )
           {
             // Look for nested object
