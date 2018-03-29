@@ -101,31 +101,23 @@ namespace Xceed.Wpf.Toolkit
           var CollectionControl = (CollectionControl) d;
           if (CollectionControl != null)
           {
-              CollectionControl.AddINotifyCollectionEvent();
+              CollectionControl.ClearItemsForINotifyCollectionChanged();
                 CollectionControl.OnItemSourceChanged((IEnumerable) e.OldValue, (IEnumerable) e.NewValue);
           }
 
       }
 
-      public void AddINotifyCollectionEvent()
+      public void ClearItemsForINotifyCollectionChanged()
       {
-          if (ItemsSource is INotifyCollectionChanged isINotifyCollectionChanged)
+          if (ItemsSource is INotifyCollectionChanged)
           {
-              isINotifyCollectionChanged.CollectionChanged += NotifyCollectionChangedOnCollectionChanged;
-          }
+              Items?.Clear();
+            }
       }
-
-        private void NotifyCollectionChangedOnCollectionChanged(object sender, NotifyCollectionChangedEventArgs e)
-      {
-          if (sender is IEnumerable collection)
-          {
-              OnItemSourceChanged(null, collection);
-          }
-        }
 
       public void OnItemSourceChanged( IEnumerable oldValue, IEnumerable newValue )
     {
-        Items?.Clear();
+        
 
             if ( newValue != null )
       {

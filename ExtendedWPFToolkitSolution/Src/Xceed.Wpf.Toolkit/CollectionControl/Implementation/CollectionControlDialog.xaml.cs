@@ -238,7 +238,15 @@ namespace Xceed.Wpf.Toolkit
           var parameters = propertyInfo.GetIndexParameters();
           var index = parameters.GetLength( 0 ) == 0 ? null : new object[] { parameters.GetLength( 0 ) - 1 };
             object propertyInfoValue = null;
-            if (index != null && GetPropertyValue<int>(source, "Count") != 0)
+
+            if (propertyInfo.Name == "Item")
+            {
+                if (index != null && GetPropertyValue<int>(source, "Count") != 0)
+                {
+                    propertyInfoValue = propertyInfo.GetValue(source, index);
+                }
+            }
+            else
             {
                 propertyInfoValue = propertyInfo.GetValue(source, index);
             }
