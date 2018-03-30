@@ -436,7 +436,8 @@ namespace Xceed.Wpf.Toolkit
       this.RaiseEvent( new ItemEventArgs( ItemAddedEvent, newItem ) );
 
       SelectedItem = newItem;
-    }
+        PersistChanges();
+        }
 
       protected virtual void CanAddNew( object sender, CanExecuteRoutedEventArgs e )
     {
@@ -462,7 +463,8 @@ namespace Xceed.Wpf.Toolkit
       Items.Remove( e.Parameter );
 
       this.RaiseEvent( new ItemEventArgs( ItemDeletedEvent, e.Parameter ) );
-    }
+        PersistChanges();
+        }
 
     private void CanDelete( object sender, CanExecuteRoutedEventArgs e )
     {
@@ -479,7 +481,8 @@ namespace Xceed.Wpf.Toolkit
       this.RaiseEvent( new ItemEventArgs( ItemMovedDownEvent, selectedItem ) );
 
       SelectedItem = selectedItem;
-    }
+        PersistChanges();
+        }
 
     private void CanMoveDown( object sender, CanExecuteRoutedEventArgs e )
     {
@@ -497,6 +500,7 @@ namespace Xceed.Wpf.Toolkit
       this.RaiseEvent( new ItemEventArgs( ItemMovedUpEvent, selectedItem ) );
 
       SelectedItem = selectedItem;
+        PersistChanges();
     }
 
     private void CanMoveUp( object sender, CanExecuteRoutedEventArgs e )
